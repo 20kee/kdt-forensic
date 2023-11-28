@@ -2,6 +2,7 @@ import pytsk3, sys
 import hashlib
 
 class Extract_File:
+
     def __init__(self, drive):
         self.volume='\\\\.\\'+ drive                 # 장치이름 지정
         self.img=pytsk3.Img_Info(self.volume)   # 장치를 입력

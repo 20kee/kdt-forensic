@@ -1,5 +1,4 @@
 import winreg
-
 def get_subkeys(hive, subkey):
     try:
         with winreg.OpenKey(hive, subkey) as key:
