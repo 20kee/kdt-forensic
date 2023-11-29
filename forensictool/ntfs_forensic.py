@@ -1,4 +1,5 @@
 import pytsk3, sys
+import os
 import hashlib
 
 class Extract_File:
@@ -17,7 +18,7 @@ class Extract_File:
         with open(output_name,'wb') as o:
             o.write(buffer)
 
-    def Extract_UsnJrnl(self):                  # $j 파일 저장
+    def Extract_UsnJrnl(self, folder):                  # $j 파일 저장
         f=self.fs.open('/$Extend/$UsnJrnl')
         found=True
         
@@ -28,7 +29,7 @@ class Extract_File:
         if not found:
             sys.exit(0)
 
-        with open('$UsnJrnl','wb') as o:
+        with open(folder+'/ntfs/$UsnJrnl','wb') as o:
             offset=0
             size=attr.info.size
             while offset < size:
@@ -40,10 +41,12 @@ class Extract_File:
                 offset+=len(buf)
 
 def main(folder):
+    os.mkdir(folder+'/ntfs')
     Ext=Extract_File('C:')
-    Ext.Extract('/$MFT','$MFT')
-    Ext.Extract('/$LogFile','$LogFile')
-    Ext.Extract_UsnJrnl()
+    print(folder+'/ntfs/$MFT')
+    Ext.Extract('/$MFT',folder+'/ntfs/$MFT')
+    Ext.Extract('/$LogFile',folder+'/ntfs/$LogFile')
+    Ext.Extract_UsnJrnl(folder)
     files = ['$MFT', '$LogFile', '$UsnJrnl']
     enc = hashlib.md5()
     for file in files:
@@ -53,4 +56,4 @@ def main(folder):
             print(enc.hexdigest())
 
 if __name__ == '__main__':
-    main()
+    main('./test')
