@@ -32,11 +32,18 @@ def main():
             forensic_tool.NTFSForensic()
         if extension_search_var.get():
             forensic_tool.SearchFileByExtension(extension_entry.get())
-        if eventlog_var.get():
-            forensic_tool.EventlogForensic()
         if registry_var.get():
             forensic_tool.RegistryForensic(registry_opt_entry.get())
         
+        
+        if eventlog_Application_var.get():
+            forensic_tool.EventlogForensic()
+        if eventlog_Security_var.get():
+            forensic_tool.EventlogForensic()
+        if eventlog_System_var.get():
+            forensic_tool.EventlogForensic()
+        if eventlog_Setup_var.get():
+            forensic_tool.EventlogForensic()
 
     drive_label = Label(window, text='드라이브')
     drive_label.place(x=120, y=13)
@@ -62,9 +69,24 @@ def main():
     extension_search_check = Checkbutton(window, text='File Extension', variable=extension_search_var)
     extension_search_check.place(x=192, y=45)
 
-    eventlog_var = IntVar()
-    eventlog_check = Checkbutton(window, text='EventLog', variable=eventlog_var)
-    eventlog_check.place(x=10, y=76)
+    #EventLog
+    eventlog_Application_var = IntVar()
+    eventlog_Application_check = Checkbutton(window, text='EventLog-Application', variable=eventlog_Application_var)
+    eventlog_Application_check.place(x=10, y=110)
+    
+    eventlog_Security_var = IntVar()
+    eventlog_Security_check = Checkbutton(window, text='EventLog-Security', variable=eventlog_Security_var)
+    eventlog_Security_check.place(x=10, y=135)
+    
+    eventlog_System_var = IntVar()
+    eventlog_System_check = Checkbutton(window, text='EventLog-System', variable=eventlog_System_var)
+    eventlog_System_check.place(x=10, y=160)
+    
+    eventlog_Setup_var = IntVar()
+    eventlog_Setup_check = Checkbutton(window, text='EventLog-Setup', variable=eventlog_Setup_var)
+    eventlog_Setup_check.place(x=10, y=185)
+    
+    
 
     registry_var = IntVar()
     registry_check = Checkbutton(window, text='Registry', variable=registry_var)
@@ -76,7 +98,7 @@ def main():
     
 
     start_button = Button(window, text="포렌식 시작", command= forensic_main)
-    start_button.place(x=10, y=112)
+    start_button.place(x=10, y=312)
 
     window.mainloop()
 
