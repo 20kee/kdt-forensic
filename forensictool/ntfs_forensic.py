@@ -39,7 +39,7 @@ class Extract_File:
                 o.write(buf)
                 offset+=len(buf)
 
-def main():
+def main(folder):
     Ext=Extract_File('C:')
     Ext.Extract('/$MFT','$MFT')
     Ext.Extract('/$LogFile','$LogFile')
@@ -47,7 +47,7 @@ def main():
     files = ['$MFT', '$LogFile', '$UsnJrnl']
     enc = hashlib.md5()
     for file in files:
-        with open(file, 'rb') as f:
+        with open(folder+'/ntfs/'+file, 'rb') as f:
             text = f.read()
             enc.update(text)
             print(enc.hexdigest())
