@@ -1,6 +1,7 @@
 from tkinter import *
 from forensictool.forensic_tool import *
 import shutil
+import os
 
 window_names = ["window xp", "window 7", "window 8", "window 10", "window 11"]
 
@@ -118,6 +119,18 @@ def main():
             print(f"Error in WindowsNotificationForensic: {e}")\
             
         forensic_tool.CsvCreate()
+#브라우저 분석 함수  
+    def browser_analysis():
+        browser_tool = browserTool()
+        file_path = filedialog.askopenfilename()
+        h_or_c = os.path.basename(file_path)
+        if "Cookies" in h_or_c or 'cookies'in h_or_c:
+            print(file_path) 
+            browser_tool.cookie_analysis(file_path)
+        elif "places" in h_or_c or 'History' in h_or_c:
+            print(file_path)
+            browser_tool.history_analysis(file_path)
+    
 
     drive_label = Label(window, text='드라이브')
     drive_label.place(x=120, y=13)
@@ -188,6 +201,8 @@ def main():
 
     start_button = Button(window, text="포렌식 시작", command= forensic_main)
     start_button.place(x=10, y=312)
+    browser_button = Button(window, text="브라우저 히스토리, 쿠키 분석", command= browser_analysis)
+    browser_button.place(x=10, y=340)
 
     main_folder_label = Label(window, text='폴더명')
     main_folder_label.place(x=90, y=312)

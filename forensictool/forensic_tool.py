@@ -132,6 +132,19 @@ class ForensicTool:
         folder_name = 'windows_notification'
         os.mkdir(self._main_folder_name + '\\' + folder_name)
         self._window_notification_tool.WNC_copy(self._main_folder_name + '\\' + folder_name)
+#브라우저 분석 클래스
+class browserTool:
+    def cookie_analysis(self, path):
+        print(path)
+        app = CookieAnalyzer(path)
+        app.mainloop()
+
+    def history_analysis(self, path):
+        print(path)
+        app = HistoryAnalyzer(path)
+        app.mainloop()
+
+
 
 
 

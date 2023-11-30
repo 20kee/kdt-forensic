@@ -3,6 +3,9 @@
 import os
 import shutil
 import hashlib
+import tkinter as tk
+from tkinter import ttk, scrolledtext
+import sqlite3
 
 class BrowserForensicTool:
     def __init__(self):
@@ -80,12 +83,142 @@ class BrowserForensicTool:
                     profile_name = os.path.basename(profile_path)
                     destination_file = f'firefox_{profile_name}_{file_name}'
                     self.copy_and_log_file_hash(file_path, os.path.join(dest, destination_file))
+#쿠키분석 클래스
+class CookieAnalyzer(tk.Tk):
+    def __init__(self, db_path):
+        super().__init__()
+        self.db_path = db_path
+        self.title("Cookie Analyzer")
+        self.geometry("800x600") 
+        self.create_widgets()
 
-# 클래스 인스턴스 생성
-forensic_tool = BrowserForensicTool()
+    def create_widgets(self):
+        self.search_frame = ttk.Frame(self)
+        self.search_frame.pack(side=tk.TOP, fill=tk.X)
 
-# 목적지 폴더 지정
-destination_folder = os.path.join(os.path.expanduser('~'), 'Desktop', 'test','edge')
+        self.search_label = ttk.Label(self.search_frame, text="Search:")
+        self.search_label.pack(side=tk.LEFT, padx=5, pady=5)
 
-# 메서드 호출
-forensic_tool.copy_chrome_data(destination_folder)
+        self.search_options = ttk.Combobox(self.search_frame, values=["name", "value", "host_key", "path", "expires_utc", "creation_utc", "last_update_utc", "is_secure", "is_httponly","ALL"])
+        self.search_options.pack(side=tk.LEFT, padx=5, pady=5)
+        self.search_options.current(0) 
+
+        self.search_entry = ttk.Entry(self.search_frame)
+        self.search_entry.pack(side=tk.LEFT, padx=5, pady=5, expand=True, fill=tk.X)
+
+        self.search_button = ttk.Button(self.search_frame, text="Search", command=self.filter_cookies)
+        self.search_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.tree = ttk.Treeview(self)
+        columns = ("name", "value", "host_key", "path", "expires_utc", "creation_utc", "last_update_utc", "is_secure", "is_httponly")
+        self.tree["columns"] = columns
+
+        self.tree.column("#0", width=0, stretch=tk.NO)
+        for col in columns:
+            self.tree.column(col, anchor=tk.W, width=100)
+            self.tree.heading(col, text=col.replace("_", " ").title(), anchor=tk.W)  
+
+        self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.load_cookies()
+
+    def load_cookies(self, query=None):
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+
+            if query:
+                cursor.execute(query)
+            else:
+                cursor.execute('SELECT name, value, host_key, path, expires_utc, creation_utc, last_update_utc, is_secure, is_httponly FROM cookies')
+
+            self.tree.delete(*self.tree.get_children())
+            for row in cursor:
+                self.tree.insert("", tk.END, values=row)
+
+            conn.close()
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def filter_cookies(self):
+        search_term = self.search_entry.get()
+        selected_option = self.search_options.get()
+        query = f'''
+        SELECT name, value, host_key, path, expires_utc, creation_utc, last_update_utc, is_secure, is_httponly 
+        FROM cookies 
+        WHERE {selected_option} LIKE '%{search_term}%'
+        '''
+        self.load_cookies(query)
+
+#히스토리 분석 클래스
+class HistoryAnalyzer(tk.Tk):
+    def __init__(self, db_path):
+        super().__init__()
+        self.db_path = db_path
+        self.title("History Analyzer")
+        self.geometry("800x600") 
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.search_frame = ttk.Frame(self)
+        self.search_frame.pack(side=tk.TOP, fill=tk.X)
+
+        self.search_label = ttk.Label(self.search_frame, text="Search:")
+        self.search_label.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.search_options = ttk.Combobox(self.search_frame, values=["url", "visit_time", "title", "ALL"])
+        self.search_options.pack(side=tk.LEFT, padx=5, pady=5)
+        self.search_options.current(0)
+
+        self.search_entry = ttk.Entry(self.search_frame)
+        self.search_entry.pack(side=tk.LEFT, padx=5, pady=5, expand=True, fill=tk.X)
+
+        self.search_button = ttk.Button(self.search_frame, text="Search", command=self.filter_history)
+        self.search_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.tree = ttk.Treeview(self)
+        columns = ("url", "visit_time", "title")
+        self.tree["columns"] = columns
+
+        self.tree.column("#0", width=0, stretch=tk.NO)
+        for col in columns:
+            self.tree.column(col, anchor=tk.W, width=100)
+            self.tree.heading(col, text=col.replace("_", " ").title(), anchor=tk.W)  
+
+        self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.load_history()
+
+    def load_history(self, query=None):
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+
+            if query:
+                cursor.execute(query)
+            else:
+                cursor.execute("SELECT url, datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime') as visit_time, title FROM urls")
+
+            self.tree.delete(*self.tree.get_children())
+            for row in cursor:
+                self.tree.insert("", tk.END, values=row)
+
+            conn.close()
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def filter_history(self):
+        search_term = self.search_entry.get()
+        selected_option = self.search_options.get()
+
+        if selected_option == "ALL":
+            query = f'''
+            SELECT url, datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime') as visit_time, title
+            FROM urls
+            WHERE url LIKE '%{search_term}%' OR title LIKE '%{search_term}%'
+            '''
+        else:
+            query = f'''
+            SELECT url, datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime') as visit_time, title
+            FROM urls
+            WHERE {selected_option} LIKE '%{search_term}%'
+            '''
+        self.load_history(query)
