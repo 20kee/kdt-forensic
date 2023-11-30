@@ -33,21 +33,91 @@ def main():
             forensic_tool = ForensicTool(window_names[window_opt], drive=drive_entry.get(), main_folder_name=main_folder_name)
 
         forensic_tool.SetLink()
-        if recycle_bin_var.get():
-            forensic_tool.RecycleBinForensic()
-        if ntfs_var.get():
-            forensic_tool.NTFSForensic()
-        if extension_search_var.get():
-            forensic_tool.SearchFileByExtension(extension_entry.get())
-        if registry_var.get():
-            forensic_tool.RegistryForensic(registry_opt_entry.get())
-        if eventlog_var.get():
-            forensic_tool.EventlogForensic()
+        
+        
+        try:
+            if recycle_bin_var.get():
+                forensic_tool.RecycleBinForensic()
+        except Exception as e:
+            print(f"Error in RecycleBinForensic: {e}")
+
+        try:
+            if ntfs_var.get():
+                forensic_tool.NTFSForensic()
+        except Exception as e:
+            print(f"Error in NTFSForensic: {e}")
+
+        try:
+            if extension_search_var.get():
+                forensic_tool.SearchFileByExtension(extension_entry.get())
+        except Exception as e:
+            print(f"Error in SearchFileByExtension: {e}")
+
+        try:
+            if registry_var.get():
+                forensic_tool.RegistryForensic(registry_opt_entry.get())
+        except Exception as e:
+            print(f"Error in RegistryForensic: {e}")
+
+        try:
+            if eventlog_var.get():
+                forensic_tool.EventlogForensic()
+        except Exception as e:
+            print(f"Error in EventlogForensic: {e}")
+            
         if browser_var.get():
-            forensic_tool.ChromeForensic()
-            forensic_tool.EdgeForensic()
-            forensic_tool.FirefoxForensic()
-    
+            try:
+                forensic_tool.ChromeForensic()
+            except:
+                pass
+            
+            try:
+                forensic_tool.EdgeForensic()
+            except:
+                pass
+
+            try:
+                forensic_tool.FirefoxForensic()
+            except:
+                pass
+
+        try:
+            if timeline_var.get():
+                forensic_tool.TimeLineForensic()
+        except Exception as e:
+            print(f"Error in TimeLineForensic: {e}")
+
+        try:
+            if prefetch_var.get():
+                forensic_tool.PrefetchForensic()
+        except Exception as e:
+            print(f"Error in PrefetchForensic: {e}")
+
+        try:
+            if srum_var.get():
+                forensic_tool.SrumForensic()
+        except Exception as e:
+            print(f"Error in SrumForensic: {e}")
+
+        try:
+            if jumplist_var.get():
+                forensic_tool.JumplistForensic()
+        except Exception as e:
+            print(f"Error in JumplistForensic: {e}")
+
+        try:
+            if usblog_var.get():
+                forensic_tool.UsblogForensic()
+        except Exception as e:
+            print(f"Error in UsblogForensic: {e}")
+
+        try:
+            if windows_noti_var.get():
+                forensic_tool.WindowsNotificationForensic()
+        except Exception as e:
+            print(f"Error in WindowsNotificationForensic: {e}")\
+            
+        forensic_tool.CsvCreate()
 
     drive_label = Label(window, text='드라이브')
     drive_label.place(x=120, y=13)
@@ -63,16 +133,16 @@ def main():
     
 
     recycle_bin_var = IntVar()
-    recycle_bin_check = Checkbutton(window, text='휴지통 포렌식', variable=recycle_bin_var)
+    recycle_bin_check = Checkbutton(window, text='Recycle Bin', variable=recycle_bin_var)
     recycle_bin_check.place(x=10, y=45)
 
     ntfs_var = IntVar()
     ntfs_check = Checkbutton(window, text='NTFS', variable=ntfs_var)
-    ntfs_check.place(x=128, y=45)
+    ntfs_check.place(x=109, y=45)
 
     extension_search_var = IntVar()
     extension_search_check = Checkbutton(window, text='File Extension', variable=extension_search_var)
-    extension_search_check.place(x=192, y=45)
+    extension_search_check.place(x=175, y=45)
 
     #EventLog
     eventlog_var = IntVar()
@@ -81,15 +151,40 @@ def main():
 
     registry_var = IntVar()
     registry_check = Checkbutton(window, text='Registry', variable=registry_var)
-    registry_check.place(x=102, y=76)
+    registry_check.place(x=93, y=76)
     
     registry_opt_entry = Entry(window, width=3)
     registry_opt_entry.insert(0, 'all')
-    registry_opt_entry.place(x=180, y=80)
+    registry_opt_entry.place(x=170, y=80)
 
     browser_var = IntVar()
     browser_check = Checkbutton(window, text='Browser History', variable=browser_var)
-    browser_check.place(x=10, y=106)
+    browser_check.place(x=203, y=76)
+
+    timeline_var = IntVar()
+    timeline_check = Checkbutton(window, text='TimeLine', variable=timeline_var)
+    timeline_check.place(x=10, y=106)
+
+    prefetch_var = IntVar()
+    prefetch_check = Checkbutton(window, text='Prefetch', variable=prefetch_var)
+    prefetch_check.place(x=90, y=106)
+
+    srum_var = IntVar()
+    srum_check = Checkbutton(window, text='Srum', variable=srum_var)
+    srum_check.place(x=170, y=106)
+
+    jumplist_var = IntVar()
+    jumplist_check = Checkbutton(window, text='Jumplist', variable=jumplist_var)
+    jumplist_check.place(x=228, y=106)
+
+    usblog_var = IntVar()
+    usblog_check = Checkbutton(window, text='Usblog', variable=usblog_var)
+    usblog_check.place(x=10, y=136)
+
+    windows_noti_var = IntVar()
+    windows_noti_check = Checkbutton(window, text='Windows Notification', variable=windows_noti_var)
+    windows_noti_check.place(x=80, y=136)
+
 
     start_button = Button(window, text="포렌식 시작", command= forensic_main)
     start_button.place(x=10, y=312)

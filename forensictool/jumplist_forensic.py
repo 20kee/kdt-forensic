@@ -1,7 +1,7 @@
 import shutil
 import getpass
 
-class jumplist:
+class JumpList:
     def __init__(self):
         pass
 
@@ -15,7 +15,7 @@ class jumplist:
             i +=1
 
 def main(folder):
-    jmplist = jumplist()
+    jmplist = JumpList()
     jmplist.jumplist_copy(folder)
 
 if __name__ == '__main__':

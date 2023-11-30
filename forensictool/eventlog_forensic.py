@@ -1,52 +1,38 @@
-import win32evtlog
-import win32evtlogutil
 import shutil
+import os
+import hashlib
 
 class EventlogForensicTool:
     def __init__(self):
         pass
     
-    def CoptEventLogs(self, dest):
+    def CopyEventLogs(self, dest):
         shutil.copytree("C:\\Windows\\System32\\winevt\\Logs", dest)
 
     def GetEventLogs(self):
-        server = 'localhost' 
-        logtype = 'System' # 'Application' # 'Security' # 'System' # 'Setup'
-        hand = win32evtlog.OpenEventLog(server,logtype)
-        flags = win32evtlog.EVENTLOG_BACKWARDS_READ|win32evtlog.EVENTLOG_SEQUENTIAL_READ
-        total = win32evtlog.GetNumberOfEventLogRecords(hand)
+        source_directory = 'C:\Windows\System32\winevt\Logs'
+        destination_directory ='./eventLog_copy'
+        folder_name = '/EventLogs'
 
+        if os.path.exists(destination_directory+folder_name+'.zip'):
+            print('이미 폴더가 존재하므로 삭제합니다.')
+            os.remove(destination_directory+folder_name+'.zip')
 
-        count = 0
-        while True:
-            events = win32evtlog.ReadEventLog(hand, flags,0) #하루 단위로 불러옴
-            if not events:
-                break
-            if events: #그 날짜에 이벤트가있으면
-                for event in events: # 그날의 모든 이벤트 출력
-                    count+=1
-                    print('────────────────────────────────────────────')
-                    print('Event Category:', event.EventCategory)
-                    print('Time Generated:', event.TimeGenerated)
-                    print('Source Name:', event.SourceName)
-                    print('Event ID:', event.EventID)
-                    print('Event Type:', event.EventType)
-                    data = event.StringInserts
-                    if data:
-                        print ('Event Data:')
-                        for msg in data:
-                            print(' ',msg)
-                        binary_data = win32evtlogutil.SafeFormatMessage(event, logtype)
+        shutil.copytree(source_directory, destination_directory+folder_name) 
+        file_list = os.listdir(destination_directory+folder_name)
+        file_count = len(file_list)
+        print(file_count,'개 파일 복사완료')
 
-                    binary_data = win32evtlogutil.SafeFormatMessage(event, logtype)
-                    binary_data = binary_data.split('\n')
-                    if binary_data:
-                        print ('Binary Data:')
-                        for bmsg in binary_data:
-                            print(' ',bmsg)
-                    print('────────────────────────────────────────────')
-                
-        print('\n개수: ', count)
+        shutil.make_archive(destination_directory+folder_name,'zip',destination_directory+folder_name)
+        print('압축 완료')
+
+        shutil.rmtree(destination_directory+folder_name)
+        print('폴더삭제 완료')
+
+        f = open(destination_directory+folder_name+".zip", 'rb')
+        data = f.read()
+        f.close()
+        print("압축파일 SHA-256: " + hashlib.sha256(data).hexdigest())
 
 
 

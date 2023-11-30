@@ -1,10 +1,17 @@
 import os
 from datetime import datetime
+from forensictool.csv_create import *
 from forensictool.ntfs_forensic import *
 from forensictool.registry_forensic import *
 from forensictool.eventlog_forensic import *
 from forensictool.file_search import *
 from forensictool.browser_history import *
+from forensictool.jumplist_forensic import *
+from forensictool.prefetch_forensic import *
+from forensictool.srum_forensic import *
+from forensictool.timeline_forensic import *
+from forensictool.usblog_forensic import *
+from forensictool.Windows_Notification_Center_forensic import *
 from tkinter import filedialog
 import hashlib
 
@@ -14,14 +21,22 @@ class ForensicTool:
         self._drive = drive
         self._window_ver = window_ver
         self._recycle_bin_link = None
+        self._csv_creater = CsvCreater()
         self._NTFS_tool = Extract_File(drive + ':')
         self._registry_tool = RegistryForensicTool()
         self._eventlog_tool = EventlogForensicTool()
         self._extension_search_tool = FileExtensionSearchTool(drive)
         self._browser_tool = BrowserForensicTool()
-
+        self._jumplist_tool = JumpList()
+        self._prefetch_tool = Prefetch()
+        self._srum_tool = Srum()
+        self._usblog_tool = Usblog()
+        self._timeline_tool = Timeline()
+        self._window_notification_tool = WNC()
     def SetLink(self):
         self._recycle_bin_link = 'C:\\$Recycle.Bin'
+    def CsvCreate(self):
+        self._csv_creater.create(self._main_folder_name)
     
     def RecycleBinForensic(self): # 휴지통 포렌식
         folder_name = "recycle_bin"
@@ -88,7 +103,35 @@ class ForensicTool:
     
 
     def FirefoxForensic(self):
-        pass
+        folder_name = 'firefox_history'
+        os.mkdir(self._main_folder_name + '\\' + folder_name)
+        self._browser_tool.copy_firefox_data(self._main_folder_name + '\\' + folder_name)
+    
+
+    def TimeLineForensic(self):
+        folder_name = 'timeline'
+        self._timeline_tool.timeline_copy(self._main_folder_name + '\\' + folder_name)
+
+    def PrefetchForensic(self):
+        folder_name = 'prefetch'
+        self._prefetch_tool.prefetch_copy(self._main_folder_name + '\\' + folder_name)
+
+    def SrumForensic(self):
+        folder_name = 'srum'
+        self._srum_tool.srum_copy(self._main_folder_name + '\\' + folder_name)
+    def JumplistForensic(self):
+        folder_name = 'jumplist'
+        self._jumplist_tool.jumplist_copy(self._main_folder_name + '\\' + folder_name)
+
+    def UsblogForensic(self):
+        folder_name = 'usblog'
+        os.mkdir(self._main_folder_name + '\\' + folder_name)
+        self._usblog_tool.usb_copy(self._main_folder_name + '\\' + folder_name)
+
+    def WindowsNotificationForensic(self):
+        folder_name = 'windows_notification'
+        os.mkdir(self._main_folder_name + '\\' + folder_name)
+        self._window_notification_tool.WNC_copy(self._main_folder_name + '\\' + folder_name)
 
 
 

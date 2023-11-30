@@ -6,7 +6,7 @@ import os
 import hashlib
 import time
 
-class csv_create:
+class CsvCreater:
     def __init__(self):
         pass
 
@@ -15,7 +15,7 @@ class csv_create:
         os_ = platform.platform()
         time_ = datetime.datetime.now(pytz.timezone("Asia/Seoul"))
 
-        with open('./초동조치 보고서.csv', 'w', newline='') as f:
+        with open(folder + '\\' + '초동조치 보고서.csv', 'w', newline='') as f:
             data = [
                 ['운영체제', os_],
                 ['타임존', time_],
@@ -23,11 +23,15 @@ class csv_create:
                 ['파일명', 'hash(md5)', 'mtime', 'atime', 'ctime', 'size']
             ]
             folder_lists = os.listdir(folder)                                       # 포랜식 툴 폴더 목록들
+            print(folder_lists)
             enc = hashlib.md5()                                                     # 해쉬 생성
 
             for folder_name in folder_lists:                                        
-                data.append(['폴더명', folder_name])                                # 툴 폴더 이름 추가
-                file_lists = os.listdir(folder+'\\'+folder_name)                    # 툴 폴더에 있는 파일, 폴더 목록
+                data.append(['폴더명', folder_name])              
+                try:                  # 툴 폴더 이름 추가
+                    file_lists = os.listdir(folder+'\\'+folder_name)                    # 툴 폴더에 있는 파일, 폴더 목록
+                except:
+                    continue
                 for file_name in file_lists:                                        # 폴더에 있는 목록들 반복
                     if os.path.isdir(folder+'\\'+folder_name+'\\'+file_name):       # 폴더안에 폴더가 있을 경우 
                         file_lists_2 = os.listdir(folder+'\\'+folder_name+'\\'+file_name)                    # 툴 폴더에 있는 폴더 파일 목록

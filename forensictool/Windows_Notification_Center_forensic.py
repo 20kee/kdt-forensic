@@ -8,11 +8,8 @@ class WNC:
 
     def WNC_copy(self, folder):
         username = getpass.getuser()
-        to_file_path = folder+'/Windows_Notification_Center/'
         from_file_path = 'C:\\Users\\'+username+'\\AppData\\Local\\Microsoft\\Windows\\Notifications\\wpndatabase.db'
-        
-        os.mkdir(to_file_path)
-        shutil.copy(from_file_path, to_file_path+'wpndatabase.db')
+        shutil.copy(from_file_path, folder + '\\' + 'wpndatabase.db')
 
 def main(folder):
     time_line = WNC()

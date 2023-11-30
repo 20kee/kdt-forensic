@@ -1,16 +1,15 @@
 import shutil
 
-class srum:
+class Srum:
     def __init__(self):
         pass
 
     def srum_copy(self, folder):
-        to_file_path = folder+'/srum/'
         from_file_path = 'C:\\Windows\\System32\\sru'
-        shutil.copytree(from_file_path, to_file_path)
+        shutil.copytree(from_file_path, folder)
 
 def main(folder):
-    srum_ = srum()
+    srum_ = Srum()
     srum_.srum_copy(folder)
 
 if __name__ == '__main__':
