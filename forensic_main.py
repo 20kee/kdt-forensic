@@ -1,5 +1,6 @@
 from tkinter import *
 from forensictool.forensic_tool import *
+import shutil
 
 window_names = ["window xp", "window 7", "window 8", "window 10", "window 11"]
 
@@ -22,8 +23,14 @@ def main():
 
     first = True
     def forensic_main():
+        main_folder_name = main_folder_entry.get()
+        try:
+            os.mkdir(main_folder_name)
+        except:
+            shutil.rmtree(main_folder_name)
+            os.mkdir(main_folder_name)
         if first:
-            forensic_tool = ForensicTool(window_names[window_opt], drive=drive_entry.get())
+            forensic_tool = ForensicTool(window_names[window_opt], drive=drive_entry.get(), main_folder_name=main_folder_name)
 
         forensic_tool.SetLink()
         if recycle_bin_var.get():
@@ -34,16 +41,13 @@ def main():
             forensic_tool.SearchFileByExtension(extension_entry.get())
         if registry_var.get():
             forensic_tool.RegistryForensic(registry_opt_entry.get())
-        
-        
-        if eventlog_Application_var.get():
+        if eventlog_var.get():
             forensic_tool.EventlogForensic()
-        if eventlog_Security_var.get():
-            forensic_tool.EventlogForensic()
-        if eventlog_System_var.get():
-            forensic_tool.EventlogForensic()
-        if eventlog_Setup_var.get():
-            forensic_tool.EventlogForensic()
+        if browser_var.get():
+            forensic_tool.ChromeForensic()
+            forensic_tool.EdgeForensic()
+            forensic_tool.FirefoxForensic()
+    
 
     drive_label = Label(window, text='드라이브')
     drive_label.place(x=120, y=13)
@@ -56,6 +60,7 @@ def main():
     extension_entry = Entry(window, width=3)
     extension_entry.insert(0, 'txt')
     extension_entry.place(x=257, y=13)
+    
 
     recycle_bin_var = IntVar()
     recycle_bin_check = Checkbutton(window, text='휴지통 포렌식', variable=recycle_bin_var)
@@ -70,23 +75,9 @@ def main():
     extension_search_check.place(x=192, y=45)
 
     #EventLog
-    eventlog_Application_var = IntVar()
-    eventlog_Application_check = Checkbutton(window, text='EventLog-Application', variable=eventlog_Application_var)
-    eventlog_Application_check.place(x=10, y=110)
-    
-    eventlog_Security_var = IntVar()
-    eventlog_Security_check = Checkbutton(window, text='EventLog-Security', variable=eventlog_Security_var)
-    eventlog_Security_check.place(x=10, y=135)
-    
-    eventlog_System_var = IntVar()
-    eventlog_System_check = Checkbutton(window, text='EventLog-System', variable=eventlog_System_var)
-    eventlog_System_check.place(x=10, y=160)
-    
-    eventlog_Setup_var = IntVar()
-    eventlog_Setup_check = Checkbutton(window, text='EventLog-Setup', variable=eventlog_Setup_var)
-    eventlog_Setup_check.place(x=10, y=185)
-    
-    
+    eventlog_var = IntVar()
+    eventlog_check = Checkbutton(window, text='EventLog', variable=eventlog_var)
+    eventlog_check.place(x=10, y=76)
 
     registry_var = IntVar()
     registry_check = Checkbutton(window, text='Registry', variable=registry_var)
@@ -95,10 +86,19 @@ def main():
     registry_opt_entry = Entry(window, width=3)
     registry_opt_entry.insert(0, 'all')
     registry_opt_entry.place(x=180, y=80)
-    
+
+    browser_var = IntVar()
+    browser_check = Checkbutton(window, text='Browser History', variable=browser_var)
+    browser_check.place(x=10, y=106)
 
     start_button = Button(window, text="포렌식 시작", command= forensic_main)
     start_button.place(x=10, y=312)
+
+    main_folder_label = Label(window, text='폴더명')
+    main_folder_label.place(x=90, y=312)
+    main_folder_entry = Entry(window, width=15)
+    main_folder_entry.insert(0, 'Forensic Result')
+    main_folder_entry.place(x= 137, y=312)
 
     window.mainloop()
 

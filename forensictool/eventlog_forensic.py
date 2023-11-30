@@ -1,8 +1,15 @@
 import win32evtlog
 import win32evtlogutil
+import shutil
 
 class EventlogForensicTool:
     def __init__(self):
+        pass
+    
+    def CoptEventLogs(self, dest):
+        shutil.copytree("C:\\Windows\\System32\\winevt\\Logs", dest)
+
+    def GetEventLogs(self):
         server = 'localhost' 
         logtype = 'System' # 'Application' # 'Security' # 'System' # 'Setup'
         hand = win32evtlog.OpenEventLog(server,logtype)

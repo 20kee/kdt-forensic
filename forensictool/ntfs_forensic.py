@@ -56,4 +56,4 @@ def main(folder):
             print(enc.hexdigest())
 
 if __name__ == '__main__':
-    main('./test')
+    main('test')
