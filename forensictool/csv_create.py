@@ -54,7 +54,7 @@ class CsvCreater:
                       
 
 def main(folder):
-    csv = csv_create()
+    csv = CsvCreater()
     csv.create(folder)
 
 if __name__ == "__main__":
