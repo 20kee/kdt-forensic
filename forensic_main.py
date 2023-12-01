@@ -56,7 +56,7 @@ def main():
 
         try:
             if registry_var.get():
-                forensic_tool.RegistryForensic(registry_opt_entry.get())
+                forensic_tool.RegistryForensic()
         except Exception as e:
             print(f"Error in RegistryForensic: {e}")
 
@@ -165,14 +165,10 @@ def main():
     registry_var = IntVar()
     registry_check = Checkbutton(window, text='Registry', variable=registry_var)
     registry_check.place(x=93, y=76)
-    
-    registry_opt_entry = Entry(window, width=3)
-    registry_opt_entry.insert(0, 'all')
-    registry_opt_entry.place(x=170, y=80)
 
     browser_var = IntVar()
     browser_check = Checkbutton(window, text='Browser History', variable=browser_var)
-    browser_check.place(x=203, y=76)
+    browser_check.place(x=173, y=76)
 
     timeline_var = IntVar()
     timeline_check = Checkbutton(window, text='TimeLine', variable=timeline_var)

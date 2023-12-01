@@ -85,11 +85,9 @@ class ForensicTool:
         folder_name = 'event_log'
         self._eventlog_tool.CoptEventLogs(self._main_folder_name + '\\' + folder_name)
 
-    def RegistryForensic(self, registry_opt): # 레지스트리 포렌식f
-        if registry_opt == 'all':
-            self._registry_tool.registry_all(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE")
-        else:
-            self._registry_tool.registry_keyword(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", registry_opt)
+    def RegistryForensic(self): # 레지스트리 포렌식
+        folder_name = 'registry'
+        self._registry_tool.registry_copy("SOFTWARE\\Microsoft", self._main_folder_name + '\\' + folder_name)
     
     def ChromeForensic(self):
         folder_name = 'chrome_history'
