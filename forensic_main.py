@@ -8,8 +8,8 @@ window_names = ["window xp", "window 7", "window 8", "window 10", "window 11"]
 def main():
     window = Tk()
     window.title('윈도우 포렌식 프로그램')
-    xw = int(400)
-    yw = int(400)
+    xw = int(325)
+    yw = int(210)
     window.geometry('{xw}x{yw}-500+500'.format(xw=xw, yw=yw))
 
     variable = StringVar(window)
@@ -18,9 +18,6 @@ def main():
     def opt_update(selection):
         global window_opt
         window_opt = selection
-
-    opt_dropdown = OptionMenu(window, variable, *window_names, command=opt_update)
-    opt_dropdown.place(x=10, y=10)
 
     first = True
     def forensic_main():
@@ -31,7 +28,7 @@ def main():
             shutil.rmtree(main_folder_name)
             os.mkdir(main_folder_name)
         if first:
-            forensic_tool = ForensicTool(window_names[window_opt], drive=drive_entry.get(), main_folder_name=main_folder_name)
+            forensic_tool = ForensicTool(window_names[-1], drive=drive_entry.get(), main_folder_name=main_folder_name)
 
         forensic_tool.SetLink()
         
@@ -130,19 +127,24 @@ def main():
         elif "places" in h_or_c or 'History' in h_or_c:
             print(file_path)
             browser_tool.history_analysis(file_path)
-    
+
+    main_folder_label = Label(window, text='폴더')
+    main_folder_label.place(x=10, y=14)
+    main_folder_entry = Entry(window, width=9)
+    main_folder_entry.insert(0, 'Forensic Result')
+    main_folder_entry.place(x= 57, y=14)
 
     drive_label = Label(window, text='드라이브')
-    drive_label.place(x=120, y=13)
+    drive_label.place(x=128, y=13)
     drive_entry = Entry(window, width=2)
     drive_entry.insert(0, 'C')
-    drive_entry.place(x=177, y=13)
+    drive_entry.place(x=185, y=13)
 
     extension_label = Label(window, text='확장자')
-    extension_label.place(x=210, y=13)
+    extension_label.place(x=215, y=13)
     extension_entry = Entry(window, width=3)
     extension_entry.insert(0, 'txt')
-    extension_entry.place(x=257, y=13)
+    extension_entry.place(x=262, y=13)
     
 
     recycle_bin_var = IntVar()
@@ -196,15 +198,11 @@ def main():
 
 
     start_button = Button(window, text="포렌식 시작", command= forensic_main)
-    start_button.place(x=10, y=312)
+    start_button.place(x=10, y=166)
     browser_button = Button(window, text="브라우저 히스토리, 쿠키 분석", command= browser_analysis)
-    browser_button.place(x=10, y=340)
+    browser_button.place(x=110, y=166)
 
-    main_folder_label = Label(window, text='폴더명')
-    main_folder_label.place(x=90, y=312)
-    main_folder_entry = Entry(window, width=15)
-    main_folder_entry.insert(0, 'Forensic Result')
-    main_folder_entry.place(x= 137, y=312)
+    
 
     window.mainloop()
 
