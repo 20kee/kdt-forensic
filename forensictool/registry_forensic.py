@@ -1,6 +1,8 @@
 import winreg
 import json
 import os
+import shutil
+
 class RegistryForensicTool:
     def __init__(self):
         pass
@@ -97,6 +99,7 @@ def main():
     # user_keyword = input("Enter keyword : ")
     registry_forensic_tool = RegistryForensicTool()
     registry_forensic_tool.registry_copy("SOFTWARE\\Microsoft", 'Forensic Result\\registry')
+    shutil.make_archive()
     # 검색 기능 : all 검색하면 다 나오고, keyword 따로 넣으면 검색됨
     # if not user_keyword:
     #     registry_forensic_tool.registry_all()

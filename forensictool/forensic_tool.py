@@ -88,6 +88,10 @@ class ForensicTool:
     def RegistryForensic(self): # 레지스트리 포렌식
         folder_name = 'registry'
         self._registry_tool.registry_copy("SOFTWARE\\Microsoft", self._main_folder_name + '\\' + folder_name)
+        shutil.make_archive(self._main_folder_name +'\\registry', 'zip', self._main_folder_name + '\\' + folder_name)
+        shutil.rmtree(self._main_folder_name + '\\' + folder_name+'\\')
+        os.mkdir(self._main_folder_name + '\\' + folder_name)
+        shutil.move(self._main_folder_name +'\\registry.zip', self._main_folder_name + '\\' + folder_name+'\\')
     
     def ChromeForensic(self):
         folder_name = 'chrome_history'
