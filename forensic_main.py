@@ -8,7 +8,7 @@ window_names = ["window xp", "window 7", "window 8", "window 10", "window 11"]
 def main():
     window = Tk()
     window.title('윈도우 포렌식 프로그램')
-    window.iconbitmap('./1083362.ico')
+    
     xw = int(325)
     yw = int(210)
     window.geometry('{xw}x{yw}-500+500'.format(xw=xw, yw=yw))

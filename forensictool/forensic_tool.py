@@ -83,7 +83,7 @@ class ForensicTool:
 
     def EventlogForensic(self): # 이벤트로그 포렌식
         folder_name = 'event_log'
-        self._eventlog_tool.CoptEventLogs(self._main_folder_name + '\\' + folder_name)
+        self._eventlog_tool.CopyEventLogs(self._main_folder_name + '\\' + folder_name)
 
     def RegistryForensic(self): # 레지스트리 포렌식
         folder_name = 'registry'

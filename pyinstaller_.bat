@@ -1,0 +1,1 @@
+pyinstaller -w -F -n=forensictool --icon=1083362.ico forensic_main.py
